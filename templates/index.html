@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Translator</title>
+
+    <!-- 🔥 MOBILE RESPONSIVE META -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 25px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            border-radius: 12px;
+            border: none;
+            padding: 10px;
+            margin-bottom: 15px;
+            resize: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+            opacity: 0.9;
+        }
+
+        .output {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.3);
+            font-size: 14px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-row button {
+            flex: 1;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        /* 🔥 MOBILE IMPROVEMENTS */
+        @media (max-width: 480px) {
+            .container {
+                padding: 18px;
+            }
+
+            textarea {
+                height: 90px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top-bar">
+        <h2>🌍 Translator</h2>
+        <button onclick="toggleMode()">🌙</button>
+    </div>
+
+    <form method="POST">
+
+        <textarea name="text" placeholder="Enter text..."></textarea>
+
+        <select name="dest">
+            <option value="hi">Hindi</option>
+            <option value="en">English</option>
+            <option value="fr">French</option>
+            <option value="es">Spanish</option>
+            <option value="de">German</option>
+            <option value="ja">Japanese</option>
+            <option value="ko">Korean</option>
+            <option value="zh-cn">Chinese</option>
+            <option value="ru">Russian</option>
+            <option value="ar">Arabic</option>
+        </select>
+
+        <button type="submit">Translate 🚀</button>
+
+    </form>
+
+    {% if translated %}
+    <div class="output">
+        <p><b>Detected:</b> {{ detected }}</p>
+        <h3 id="outputText">{{ translated }}</h3>
+
+        <div class="btn-row">
+            <button onclick="speakText()">🔊</button>
+            <button onclick="copyText()">📋</button>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="btn-row">
+        <button onclick="clearAll()">Clear 🧹</button>
+    </div>
+
+    {% if history %}
+    <div class="output">
+        <h3>History</h3>
+        {% for item in history %}
+            <p>{{ item[0] }} → {{ item[1] }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+
+// 🔊 SPEAK
+function speakText() {
+    let text = document.getElementById("outputText").innerText;
+    let speech = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(speech);
+}
+
+// 📋 COPY
+function copyText() {
+    let text = document.getElementById("outputText").innerText;
+    navigator.clipboard.writeText(text);
+}
+
+// 🧹 CLEAR
+function clearAll() {
+    document.querySelector("textarea").value = "";
+}
+
+// 🌙 DARK MODE
+function toggleMode() {
+    document.body.classList.toggle("light");
+}
+
+</script>
+
+</body>
+</html>
